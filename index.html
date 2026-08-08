@@ -88,8 +88,8 @@
       </div>
 
       <div class="form-group">
-        <label for="email">อีเมล</label>
-        <input type="email" id="email" required placeholder="example@email.com">
+        <label for="email">อีเมล (ถ้ามี)</label>
+        <input type="email" id="email" placeholder="example@email.com">
       </div>
 
       <div class="form-group">
@@ -166,7 +166,7 @@ document.getElementById('profileForm').addEventListener('submit', async function
           text: `📋 **รายละเอียดการลงทะเบียน**\n` +
                 `👤 ชื่อ-นามสกุล: ${firstname} ${lastname}\n` +
                 `📞 เบอร์โทร: ${phone}\n` +
-                `📧 อีเมล: ${email}\n` +
+                `📧 อีเมล: ${email || '-'}\n` +        // ถ้าไม่กรอก จะแสดง -
                 `🏠 ที่อยู่: ${address}\n` +
                 `📝 อื่นๆ/หมายเหตุ: ${note || '-'}`
         }
