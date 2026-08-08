@@ -135,9 +135,13 @@
     document.getElementById('profileForm').addEventListener('submit', async function(e) {
   e.preventDefault();
 
+  // 1. ดึงค่าจากฟอร์มทุกช่อง
   const firstname = document.getElementById('firstname').value;
   const lastname = document.getElementById('lastname').value;
   const phone = document.getElementById('phone').value;
+  const email = document.getElementById('email').value;
+  const address = document.getElementById('address').value;
+  const note = document.getElementById('note').value;
 
   // 1. ดึงข้อมูลเตรียมไว้ (ถ้ามี API ส่งหลังบ้านก็ใส่ตรงนี้)
   const formData = {
@@ -155,8 +159,13 @@
       // 3. คำสั่งส่งข้อความเข้าห้องแชทในนามของ User
       await liff.sendMessages([
         {
-          type: 'text',
-          text: `📋 **ลงทะเบียนสำเร็จแล้ว**\nชื่อ: ${firstname} ${lastname}\nเบอร์โทร: ${phone}`
+         type: 'text',
+          text: `📋 **รายละเอียดการลงทะเบียน**\n` +
+                `👤 ชื่อ-นามสกุล: ${firstname} ${lastname}\n` +
+                `📞 เบอร์โทร: ${phone}\n` +
+                `📧 อีเมล: ${email}\n` +
+                `🏠 ที่อยู่: ${address}\n` +
+                `📝 อื่นๆ/หมายเหตุ: ${note || '-'}` // ถ้าไม่มีข้อความจะแสดง -
         }
       ]);
     }
