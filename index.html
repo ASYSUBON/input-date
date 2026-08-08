@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ลงทะเบียนข้อมูลผู้ใช้งาน</title>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f7f6;
+      padding: 20px;
+      margin: 0;
+    }
+    .form-card {
+      background: #ffffff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    h2 {
+      color: #06C755; /* สีเขียว LINE */
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #333;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #06C755;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background-color: #05b34c;
+    }
+    .status {
+      text-align: center;
+      font-size: 12px;
+      color: #666;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-card">
+    <h2>ฟอร์มลงทะเบียน</h2>
+    <form id="profileForm">
+      <input type="hidden" id="userId" name="userId">
+
+      <div class="form-group">
+        <label for="firstname">ชื่อ</label>
+        <input type="text" id="firstname" required placeholder="สมชาย">
+      </div>
+
+      <div class="form-group">
+        <label for="lastname">นามสกุล</label>
+        <input type="text" id="lastname" required placeholder="ใจดี">
+      </div>
+
+      <div class="form-group">
+        <label for="phone">เบอร์โทรศัพท์</label>
+        <input type="tel" id="phone" required placeholder="0812345678">
+      </div>
+
+      <div class="form-group">
+        <label for="email">อีเมล</label>
+        <input type="email" id="email" required placeholder="example@email.com">
+      </div>
+
+      <div class="form-group">
+        <label for="address">ที่อยู่</label>
+        <textarea id="address" rows="3" required placeholder="ที่อยู่ปัจจุบัน..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="note">หมายเหตุ / อื่นๆ</label>
+        <input type="text" id="note" placeholder="ข้อมูลเพิ่มเติม (ถ้ามี)">
+      </div>
+
+      <button type="submit" id="submitBtn">บันทึกข้อมูล</button>
+    </form>
+    <p class="status" id="statusText">กำลังเชื่อมต่อ LINE...</p>
+  </div>
+
+  <script>
+    // ** ใส่ LIFF ID ของคุณที่นี่ **
+    const MY_LIFF_ID = "YOUR_LIFF_ID_HERE"; 
+
+    async function main() {
+      try {
+        // เริ่มต้นใช้งาน LIFF
+        await liff.init({ liffId: MY_LIFF_ID });
+
+        if (liff.isLoggedIn()) {
+          // ดึงข้อมูล Profile ของผู้ใช้
+          const profile = await liff.getProfile();
+          document.getElementById('userId').value = profile.userId;
+          document.getElementById('statusText').innerText = "เชื่อมต่อ LINE สำเร็จ";
+        } else {
+          // ถ้ายังไม่ได้ Login ให้บังคับ Login
+          liff.login();
+        }
+      } catch (error) {
+        console.error("LIFF Initialization failed", error);
+        document.getElementById('statusText').innerText = "เกิดข้อผิดพลาดในการเชื่อมต่อ LINE";
+      }
+    }
+
+    // จัดการการกดส่งฟอร์ม
+    document.getElementById('profileForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const formData = {
+        userId: document.getElementById('userId').value,
+        firstname: document.getElementById('firstname').value,
+        lastname: document.getElementById('lastname').value,
+        phone: document.getElementById('phone').value,
+        email: document.getElementById('email').value,
+        address: document.getElementById('address').value,
+        note: document.getElementById('note').value
+      };
+
+      console.log("Data to send:", formData);
+
+      // TODO: ส่งข้อมูลไปยัง Backend/API ของคุณที่นี่
+      /*
+      await fetch('YOUR_BACKEND_API_URL', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      */
+
+      alert("บันทึกข้อมูลเรียบร้อยแล้ว!");
+      
+      // ปิดหน้าต่าง LIFF หลังส่งข้อมูลสำเร็จ (ถ้าเปิดในแอป LINE)
+      if (liff.isInClient()) {
+        liff.closeWindow();
+      }
+    });
+
+    // เรียกการทำงานหลัก
+    main();
+  </script>
+</body>
+</html>
