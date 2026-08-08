@@ -132,10 +132,11 @@
     }
 
     // จัดการการกดส่งฟอร์ม
-    document.getElementById('profileForm').addEventListener('submit', async function(e) {
+document.getElementById('profileForm').addEventListener('submit', async function(e) {
   e.preventDefault();
 
-  // 1. ดึงค่าจากฟอร์มทุกช่อง
+  // 1. ดึงค่าจากฟอร์มทุกช่องเก็บไว้ในตัวแปร
+  const userId = document.getElementById('userId').value;
   const firstname = document.getElementById('firstname').value;
   const lastname = document.getElementById('lastname').value;
   const phone = document.getElementById('phone').value;
@@ -143,29 +144,31 @@
   const address = document.getElementById('address').value;
   const note = document.getElementById('note').value;
 
-  // 1. ดึงข้อมูลเตรียมไว้ (ถ้ามี API ส่งหลังบ้านก็ใส่ตรงนี้)
+  // 2. รวบรวมข้อมูลสำหรับส่งไป Backend/Database (ถ้ามี)
   const formData = {
-    userId: document.getElementById('userId').value,
-    firstname, lastname, phone,
-    email: document.getElementById('email').value,
-    address: document.getElementById('address').value,
-    note: document.getElementById('note').value
+    userId,
+    firstname,
+    lastname,
+    phone,
+    email,
+    address,
+    note
   };
 
   try {
-    // 2. เช็คว่าเปิดผ่านแอป LINE หรือไม่
+    // 3. เช็คว่าเปิดผ่านแอป LINE หรือไม่
     if (liff.isInClient()) {
       
-      // 3. คำสั่งส่งข้อความเข้าห้องแชทในนามของ User
+      // 4. ส่งข้อความสรุปข้อมูลเข้าห้องแชท
       await liff.sendMessages([
         {
-         type: 'text',
+          type: 'text',
           text: `📋 **รายละเอียดการลงทะเบียน**\n` +
                 `👤 ชื่อ-นามสกุล: ${firstname} ${lastname}\n` +
                 `📞 เบอร์โทร: ${phone}\n` +
                 `📧 อีเมล: ${email}\n` +
                 `🏠 ที่อยู่: ${address}\n` +
-                `📝 อื่นๆ/หมายเหตุ: ${note || '-'}` // ถ้าไม่มีข้อความจะแสดง -
+                `📝 อื่นๆ/หมายเหตุ: ${note || '-'}`
         }
       ]);
     }
@@ -174,9 +177,9 @@
 
   } catch (error) {
     console.error("Error sending message:", error);
-    alert("เกิดข้อผิดพลาดในการส่งข้อความ");
+    alert("เกิดข้อผิดพลาดในการส่งข้อความ: " + error.message);
   } finally {
-    // 4. ปิดหน้าต่าง LIFF
+    // 5. ปิดหน้าต่าง LIFF
     if (liff.isInClient()) {
       liff.closeWindow();
     }
