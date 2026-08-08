@@ -96,7 +96,12 @@
         <label for="address">ที่อยู่</label>
         <textarea id="address" rows="3" required placeholder="ที่อยู่ปัจจุบัน..."></textarea>
       </div>
-
+      
+      <div class="form-group">
+        <label for="symptom">อาการเสีย (ถ้ามี)</label>
+        <textarea id="symptom" rows="2" placeholder="ระบุอาการเสีย เช่น เปิดไม่ติด, หน้าจอแตก"></textarea>
+      </div>
+      
       <div class="form-group">
         <label for="note">หมายเหตุ / อื่นๆ</label>
         <input type="text" id="note" placeholder="ข้อมูลเพิ่มเติม (ถ้ามี)">
@@ -142,6 +147,7 @@ document.getElementById('profileForm').addEventListener('submit', async function
   const phone = document.getElementById('phone').value;
   const email = document.getElementById('email').value;
   const address = document.getElementById('address').value;
+  const symptom = document.getElementById('symptom').value; // ดึงค่าอาการเสีย
   const note = document.getElementById('note').value;
 
   // 2. รวบรวมข้อมูลสำหรับส่งไป Backend/Database (ถ้ามี)
@@ -152,6 +158,7 @@ document.getElementById('profileForm').addEventListener('submit', async function
     phone,
     email,
     address,
+    symptom,
     note
   };
 
@@ -168,6 +175,7 @@ document.getElementById('profileForm').addEventListener('submit', async function
                 `📞 เบอร์โทร: ${phone}\n` +
                 `📧 อีเมล: ${email || '-'}\n` +        // ถ้าไม่กรอก จะแสดง -
                 `🏠 ที่อยู่: ${address}\n` +
+                `🛠️ อาการเสีย: ${symptom || '-'}\n` + // แสดงอาการเสีย
                 `📝 อื่นๆ/หมายเหตุ: ${note || '-'}`
         }
       ]);
